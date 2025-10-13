@@ -1,3 +1,5 @@
+
+
 (function(){
   const $ = id => document.getElementById(id);
   const simulateBtn = $('simulateBtn');
@@ -5,6 +7,44 @@
   const chartOtherOutputs = $('chartOtherOutputs');
   const tableContainer = $('tableContainer');
   const summary = $('summary');
+  const landUseContainer = $('landUseContainer');
+
+  const landUses = []; // store {type, cValue, areaInput} objects
+
+  // Add land use entry dynamically
+  $('addLandUseBtn').addEventListener('click', () => {
+    const select = $('landUseType');
+    const typeText = select.options[select.selectedIndex].text;
+    const cValue = parseFloat(select.value);
+
+    const entryDiv = document.createElement('div');
+    entryDiv.classList.add('land-use-entry');
+
+    const areaInput = document.createElement('input');
+    areaInput.type = 'number';
+    areaInput.min = '0';
+    areaInput.step = '1';
+    areaInput.placeholder = 'Area (m²)';
+
+    const label = document.createElement('span');
+    label.textContent = typeText;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'X';
+    removeBtn.classList.add('remove-btn');
+    removeBtn.addEventListener('click', () => {
+      landUseContainer.removeChild(entryDiv);
+      const index = landUses.findIndex(lu => lu.areaInput === areaInput);
+      if(index>-1) landUses.splice(index,1);
+    });
+
+    entryDiv.appendChild(label);
+    entryDiv.appendChild(areaInput);
+    entryDiv.appendChild(removeBtn);
+    landUseContainer.appendChild(entryDiv);
+
+    landUses.push({ type: typeText, cValue, areaInput });
+  });
 
   function validateInputs(vals){
     const { totalArea, totalRainfall, stormDuration, timesteps, canalLength, canalWidth, canalHeight, canalSlope } = vals;
@@ -14,6 +54,11 @@
     if (!(timesteps >= 1 && Number.isInteger(timesteps))) return "Timesteps must be a positive integer.";
     if (!(canalLength>0 && canalWidth>0 && canalHeight>0)) return "Canal dimensions must be positive.";
     if (!(canalSlope>0)) return "Canal slope must be positive.";
+    if(landUses.length===0) return "Please add at least one land use.";
+    for(const lu of landUses){
+      const area = parseFloat(lu.areaInput.value);
+      if(isNaN(area) || area<=0) return `Please enter a valid area for ${lu.type}`;
+    }
     return null;
   }
 
@@ -26,10 +71,21 @@
     return Q * timestepHours * 3600; // convert to m³ per timestep
   }
 
+  function calculateWeightedC(){
+    let totalAreaSum = 0;
+    let weightedSum = 0;
+    for(const lu of landUses){
+      const area = parseFloat(lu.areaInput.value);
+      totalAreaSum += area;
+      weightedSum += area * lu.cValue;
+    }
+    return totalAreaSum>0 ? (weightedSum/totalAreaSum) : 0;
+  }
+
   function runSimulation(vals){
     const { totalArea, totalRainfall, stormDuration, timesteps, canalLength, canalWidth, canalHeight, canalSlope } = vals;
     const timestepHours = stormDuration / timesteps;
-    const runoffC = 0.61;
+    const runoffC = calculateWeightedC(); // use weighted C from user inputs
 
     // Time of concentration
     const L = canalLength;
@@ -77,7 +133,6 @@
         rows.push({
             Hour: ((t+1)*timestepHours).toFixed(2),
             Rainfall: Number(rainfall[t].toFixed(2)),
-            // CanalOutflow removed from display
             WaterDepth: Number(water_depth[t].toFixed(2)),
             FloodedArea: Number(flooded_area[t].toFixed(2)),
             FloodSeverity: severity
@@ -168,9 +223,9 @@
       }
     }
 
-    const colors = {rainfall:"#1f77b4", WaterDepth:"#d62728", flooded_area:"#2ca02c"}; // canalOutflow hidden
+    const colors = {rainfall:"#1f77b4", WaterDepth:"#d62728", flooded_area:"#2ca02c"}; 
     for(const key in seriesToDraw){ 
-      if(key==="canalOutflow") continue; // skip drawing canal outflow
+      if(key==="canalOutflow") continue; 
       drawLine(seriesToDraw[key], colors[key]); 
     }
 
@@ -179,25 +234,26 @@
   }
 
   simulateBtn.addEventListener('click', ()=>{
-  const vals = {
-  totalArea: parseFloat($('totalArea').value), // if you have an input for area
-  totalRainfall: parseFloat($('totalRainfall').value),
-  stormDuration: parseFloat($('stormDuration').value),
-  timesteps: parseInt($('timesteps').value,10),
-  canalLength: parseFloat($('canalLength').value),
-  canalWidth: parseFloat($('canalWidth').value),
-  canalHeight: parseFloat($('canalHeight').value),
-  canalSlope: parseFloat($('canalSlope').value)
-};
+    const vals = {
+      totalArea: parseFloat($('totalArea').value),
+      totalRainfall: parseFloat($('totalRainfall').value),
+      stormDuration: parseFloat($('stormDuration').value),
+      timesteps: parseInt($('timesteps').value,10),
+      canalLength: parseFloat($('canalLength').value),
+      canalWidth: parseFloat($('canalWidth').value),
+      canalHeight: parseFloat($('canalHeight').value),
+      canalSlope: parseFloat($('canalSlope').value)
+    };
+
     const err = validateInputs(vals);
-  if(err){ alert(err); return; }
+    if(err){ alert(err); return; }
 
-  simulateBtn.disabled = true;
-  const result = runSimulation(vals);
-  renderTable(result.rows);
+    simulateBtn.disabled = true;
+    const result = runSimulation(vals);
+    renderTable(result.rows);
 
-  drawChart(chartFloodedArea, {flooded_area: result.series.flooded_area}, result.series.timestepHours);
-  drawChart(chartOtherOutputs, {rainfall: result.series.rainfall, WaterDepth: result.series.water_depth}, result.series.timestepHours);
+    drawChart(chartFloodedArea, {flooded_area: result.series.flooded_area}, result.series.timestepHours);
+    drawChart(chartOtherOutputs, {rainfall: result.series.rainfall, WaterDepth: result.series.water_depth}, result.series.timestepHours);
 
   summary.innerHTML = `Runoff coefficient (C): <strong>${result.meta.C}</strong>, 
   Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>, 
