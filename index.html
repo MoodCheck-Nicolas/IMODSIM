@@ -86,14 +86,16 @@ footer {
 <header>
   <div class="header-content">
     <div class="logo">
-      <span class="title">Rainfall Duration-Drainage Capacity Model for Urban Flooding (Magtoto Compound) </span>
+      <span class="title">Rainfall Duration-Drainage Capacity Model for Urban Flooding</span>
     </div>
     <nav>
-      <a href="#">Simulation</a>
-      <a href="#">Research Paper</a>
-      <a href="#">FAQ</a>
+      <a href="index.html">Home</a>
+      <a href="custom_simulation.html">Custom Simulation</a>
+      <a href="research_paper.html">Research Paper</a>
+      <a href="faq.html">FAQ</a>
     </nav>
   </div>
+
 </header>
 <body>
 
@@ -102,10 +104,7 @@ footer {
 <p class="note">Enter inputs, click <strong>Simulate</strong>. Drainage outflow is calculated using Manning formula (concrete canal, n=0.015). Runoff coefficient and time of concentration are included.</p>
 
 <div class="grid">
-  <div>
-    <label>Total area (sq.m)</label>
-    <input id="totalArea" type="number" min="0.01" step="0.01" value="19274.25">
-  </div>
+  
   <div>
     <label>Total rainfall depth (mm)</label>
     <input id="totalRainfall" type="number" min="0" step="0.01" value="200">
@@ -118,22 +117,7 @@ footer {
     <label>Number of timesteps (integer)</label>
     <input id="timesteps" type="number" min="1" step="1" value="10">
   </div>
-  <div>
-    <label>Canal length (m)</label>
-    <input id="canalLength" type="number" min="0.01" step="0.01" value="176.16">
-  </div>
-  <div>
-    <label>Canal width (m)</label>
-    <input id="canalWidth" type="number" min="0.01" step="0.01" value="0.3045">
-  </div>
-  <div>
-    <label>Canal height (m)</label>
-    <input id="canalHeight" type="number" min="0.01" step="0.01" value="0.33">
-  </div>
-  <div>
-    <label>Canal slope (m/m)</label>
-    <input id="canalSlope" type="number" min="0.001" step="0.001" value="0.01047">
-  </div>
+ 
 </div>
 
 <div style="margin-top:12px; display:flex; gap:10px;">
@@ -337,16 +321,16 @@ footer {
   }
 
   simulateBtn.addEventListener('click', ()=>{
-    const vals = {
-      totalArea: parseFloat($('totalArea').value),
-      totalRainfall: parseFloat($('totalRainfall').value),
-      stormDuration: parseFloat($('stormDuration').value),
-      timesteps: parseInt($('timesteps').value,10),
-      canalLength: parseFloat($('canalLength').value),
-      canalWidth: parseFloat($('canalWidth').value),
-      canalHeight: parseFloat($('canalHeight').value),
-      canalSlope: parseFloat($('canalSlope').value)
-    };
+  const vals = {
+    totalArea: 19274.25, // study area constant
+    totalRainfall: parseFloat($('totalRainfall').value),
+    stormDuration: parseFloat($('stormDuration').value),
+    timesteps: parseInt($('timesteps').value,10),
+    canalLength: 176.16,   // fixed value
+    canalWidth: 0.3045,    // fixed value
+    canalHeight: 0.33,     // fixed value
+    canalSlope: 0.01047    // fixed value
+  };
     const err = validateInputs(vals);
     if(err){ alert(err); return; }
 
