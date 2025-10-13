@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ – Urban Flood Simulation Tool</title>
+<link rel = "stylesheet" href = "css/faq.css">
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <div class="logo"><span class="title">Urban Flood Simulation Tool – FAQ</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="custom_simulation.html">Custom Simulation</a>
+      <a href="research_paper.html">Research Paper</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main class="faq-container">
+  <h1>Frequently Asked Questions</h1>
+
+  <div class="faq-item">
+    <button class="faq-question">What is the Rainfall Duration–Drainage Capacity Model?</button>
+    <div class="faq-answer">
+      <p>This model simulates how rainfall interacts with urban drainage systems. It uses canal dimensions, land surfaces, and rainfall inputs to estimate surface runoff, drainage capacity, and potential flooding in urban areas.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">What is the main purpose of this simulation?</button>
+    <div class="faq-answer">
+      <p>The main purpose is to provide a simple yet practical tool for communities and planners to assess whether local drainage systems can handle specific rainfall events, identify potential flood risks, and make better decisions for urban flood management.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">Why is this simulation important?</button>
+    <div class="faq-answer">
+      <ul>
+        <li>Urban areas are increasingly prone to flooding due to more impervious surfaces (concrete, roofs, asphalt).</li>
+        <li>Extreme rainfall events are becoming more frequent and intense due to climate change.</li>
+        <li>It helps local governments plan and improve drainage systems without expensive and complex modeling tools.</li>
+        <li>Communities can visualize flood risks and take preventive measures.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">What is the runoff coefficient (C) and how is it calculated?</button>
+    <div class="faq-answer">
+      <p>The runoff coefficient (C) represents the fraction of rainfall that becomes surface runoff.</p>
+      <pre>C_weighted = (Σ (Area_i × C_i)) / Total Area</pre>
+      <p>Weighted C is used when multiple land-use types are present. High C values indicate high runoff and low infiltration, while low C values indicate high infiltration and less runoff.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">What is Time of Concentration (Tc)?</button>
+    <div class="faq-answer">
+      <p>Tc is the time it takes for water to travel from the farthest point in a drainage area to the outlet or point of collection.</p>
+      <pre>Tc = 0.01947 × L^0.77 × S^-0.385 (minutes)</pre>
+      <p>This helps determine how quickly runoff reaches the drainage channel, which affects flood timing and intensity.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">How is Rainfall Intensity (I) determined?</button>
+    <div class="faq-answer">
+      <p>Rainfall intensity is the rate of rainfall over a specific period:</p>
+      <pre>I = dmax / Duration</pre>
+      <p>The simulation distributes rainfall using a triangular hyetograph to represent peak intensity at the beginning and gradually decreasing intensity toward the end of the storm.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">What is a triangular hyetograph?</button>
+    <div class="faq-answer">
+      <p>A triangular hyetograph is a chart that represents rainfall intensity over time. It rises to a peak intensity and then decreases, approximating typical storm patterns. This allows the simulation to predict runoff more accurately.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">How is canal outflow computed?</button>
+    <div class="faq-answer">
+      <pre>
+Q = (1/n) × A × R^(2/3) × sqrt(S)
+A = canal cross-sectional area
+R = hydraulic radius = A / P
+P = wetted perimeter
+S = slope of the canal bed
+n = Manning's roughness coefficient
+      </pre>
+      <p>Manning's Equation is applied to determine the maximum flow the canal can carry, which is compared against runoff inflow to assess flooding risk.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">Why does the model show “None” for C sometimes?</button>
+    <div class="faq-answer">
+      <p>Before any land-use areas are added, the model cannot compute a runoff coefficient. In such cases, it displays “None” until the user inputs land-use areas and their corresponding coefficients.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">What are the main limitations of the model?</button>
+    <div class="faq-answer">
+      <ul>
+        <li>No topography or slope variations considered</li>
+        <li>Debris, blockages, and sewer conditions are not included</li>
+        <li>Assumes a constant runoff coefficient per land type</li>
+        <li>Groundwater infiltration and tidal effects ignored</li>
+        <li>Does not account for changes in land use over time</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">How can this model help with urban planning?</button>
+    <div class="faq-answer">
+      <p>Urban planners and local authorities can use the simulation to:</p>
+      <ul>
+        <li>Identify areas prone to flooding and design mitigation measures</li>
+        <li>Optimize drainage system capacity before construction</li>
+        <li>Support climate-resilient infrastructure planning</li>
+        <li>Educate communities about flood risks and preventive actions</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">Can this simulation be adapted for other locations?</button>
+    <div class="faq-answer">
+      <p>Yes. By measuring local canal dimensions, drainage areas, and land-use types, the simulation can be adapted to other urban areas to evaluate flood risk under similar rainfall scenarios.</p>
+    </div>
+  </div>
+
+</main>
+
+
+<footer>
+  <p>&copy; 2025 Urban Flood Simulation Tool</p>
+</footer>
+
+<script>
+  // Toggle FAQ with animation
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const btn = item.querySelector('.faq-question');
+    btn.addEventListener('click', () => {
+      item.classList.toggle('open');
+    });
+  });
+</script>
+
+</body>
+</html>
