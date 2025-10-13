@@ -19,6 +19,8 @@
     </nav>
   </div>
 
+  
+
 </header>
 <body>
 
@@ -62,6 +64,48 @@
   </div>
  
 </div>
+<div class = "land-use">
+  <select id="landUseType">
+
+    <option value="0.85">Downtown areas (Business)</option>
+    <option value="0.50">Neighborhood areas (Business)</option>
+    <option value="0.40">Single-family residential</option>
+    <option value="0.50">Multi-unit detached</option>
+    <option value="0.675">Multi-unit attached</option>
+    <option value="0.75">Industrial heavy areas</option>
+    <option value="0.90">Asphalt streets</option>
+    <option value="0.95">Concrete streets</option>
+    <option value="0.10">Parks, cemeteries</option>
+    <option value="0.20">Playgrounds</option>
+    <option value="0.30">Railroad yard areas</option>
+    <option value="0.95">Roofs</option>
+    <option value="0.05">Lawns sandy flat</option>
+    <option value="0.15">Lawns sandy avg slope</option>
+    <option value="0.20">Lawns sandy steep</option>
+    <option value="0.17">Lawns heavy flat</option>
+    <option value="0.22">Lawns heavy avg slope</option>
+    <option value="0.35">Lawns heavy steep</option>
+
+    <option value="0.30">Bare soil</option>
+    <option value="0.20">Smooth soil</option>
+    <option value="0.30">Rough soil</option>
+    <option value="0.20">Cultivated rows</option>
+    <option value="0.50">Heavy soil (Average)</option>
+    <option value="0.60">Heavy soil, no crop</option>
+    <option value="0.50">Heavy soil, with crop</option>
+    <option value="0.60">Sandy soil, no crop</option>
+    <option value="0.50">Sandy soil, with crop</option>
+    <option value="0.40">Pasture</option>
+    <option value="0.25">Heavy pasture</option>
+    <option value="0.45">Sandy pasture</option>
+    <option value="0.25">Woodland</option>
+  </select>
+  <button type="button" id="addLandUseBtn">Add Land Use</button>
+</div>
+
+<div id="landUseContainer">
+  <!-- Dynamically added land use area inputs will appear here -->
+</div>
 
 <div style="margin-top:12px; display:flex; gap:10px;">
   <button id="simulateBtn">Simulate</button>
@@ -82,6 +126,49 @@
   <div id="summary" class="note"></div>
   <div id="tableContainer"></div>
 </div>
+
+<script>
+const landUseContainer = document.getElementById('landUseContainer');
+const landUses = [];
+
+document.getElementById('addLandUseBtn').addEventListener('click', () => {
+  const select = document.getElementById('landUseType');
+  const typeText = select.options[select.selectedIndex].text;
+  const cValue = parseFloat(select.value);
+
+  // Create a new entry div
+  const entryDiv = document.createElement('div');
+  entryDiv.classList.add('land-use-entry');
+
+  // Create input for area
+  const areaInput = document.createElement('input');
+  areaInput.type = 'number';
+  areaInput.min = '0';
+  areaInput.step = '1';
+  areaInput.placeholder = 'Area (m²)';
+
+  // Create label for land use type
+  const label = document.createElement('span');
+  label.textContent = typeText;
+
+  // Create remove button
+  const removeBtn = document.createElement('button');
+  removeBtn.textContent = 'X';
+  removeBtn.classList.add('remove-btn');
+  removeBtn.addEventListener('click', () => {
+    landUseContainer.removeChild(entryDiv);
+  });
+
+  entryDiv.appendChild(label);
+  entryDiv.appendChild(areaInput);
+  entryDiv.appendChild(removeBtn);
+  landUseContainer.appendChild(entryDiv);
+
+  // Optional: store this entry in landUses array if needed
+  landUses.push({ type: typeText, cValue, areaInput });
+});
+
+</script>
 
 <script src="js/simulation.js"></script>
 
