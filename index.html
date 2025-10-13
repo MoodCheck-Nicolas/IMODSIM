@@ -3,86 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel = "stylesheet" href = "css/style.css">
 <title>Rainfall Duration–Manning Drainage Model (Urban Areas)</title>
-<style>
-  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;  color:#111; }
- 
-  h1 { font-size:1.3rem; margin:0; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
-  label { display:block; font-size:0.85rem; margin-bottom:4px; }
-  input[type="number"] { width:100%; padding:8px; box-sizing:border-box; border:1px solid #bbb; border-radius:6px; }
-  button { padding:10px 14px; border-radius:8px; border: none; background:#0b79d0; color:#fff; cursor:pointer; }
-  button:disabled{opacity:.5}
-  .results { margin-top:18px; }
-  table { width:100%; border-collapse:collapse; margin-top:10px; font-size:0.9rem; }
-  th,td{ border:1px solid #ddd; padding:6px 8px; text-align:center; }
-  th{ background:#f4f4f4; }
-  .legend { display:flex; gap:12px; margin-top:8px; align-items:center; flex-wrap:wrap; }
-  .swatch { width:14px; height:12px; display:inline-block; margin-right:6px; vertical-align:middle; }
-  canvas { width:100%; height:320px; border:1px solid #eee; border-radius:6px; background:#fff; display:block; margin-top:20px; }
-  .note { font-size:0.9rem; color:#444; margin-top:8px; }
-
-  .main-content {
-  max-width: 70%; /* Adjust to control how narrow you want */
-  margin: 0 auto;     /* Center it */
-  padding: 0 16px;    /* Some breathing room */
-}
-
-
-  header {
-  background: #0c2136; /* dark greenish-blue */
-  padding: 1.5% 1.5%;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  color: #fff;
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo img {
-  height: 40px;
-  width: auto;
-}
-
-.logo .title {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-nav a {
-  margin-left: 20px;
-  text-decoration: none;
-  font-size: 0.95rem;
-  color: #e0f2f1;
-  transition: color 0.2s ease;
-}
-
-nav a:hover {
-  color: #b2dfdb;
-}
-
-footer {
-  background: #0c2136;
-  color: #eee;
-  text-align: center;
-  padding: 1.5% 1.5%;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  margin-top: 30px;
-}
-
-</style>
 </head>
+
+<body>
+
 <header>
   <div class="header-content">
     <div class="logo">
@@ -95,266 +21,53 @@ footer {
       <a href="faq.html">FAQ</a>
     </nav>
   </div>
-
 </header>
-<body>
 
 <div class="main-content">
-
-<p class="note">Enter inputs, click <strong>Simulate</strong>. Drainage outflow is calculated using Manning formula (concrete canal, n=0.015). Runoff coefficient and time of concentration are included.</p>
-
-<div class="grid">
-  
-  <div>
-    <label>Total rainfall depth (mm)</label>
-    <input id="totalRainfall" type="number" min="0" step="0.01" value="200">
-  </div>
-  <div>
-    <label>Storm duration (hours)</label>
-    <input id="stormDuration" type="number" min="0.01" step="0.01" value="5">
-  </div>
-  <div>
-    <label>Number of timesteps (integer)</label>
-    <input id="timesteps" type="number" min="1" step="1" value="10">
-  </div>
- 
-</div>
-
-<div style="margin-top:12px; display:flex; gap:10px;">
-  <button id="simulateBtn">Simulate</button>
-  <button onclick="window.location.href='custom_simulation.html'">Custom Simulation</button>
-</div>
-
-
-<div class="results">
-  <canvas id="chartFloodedArea"></canvas>
-  <canvas id="chartOtherOutputs"></canvas>
-
-  <div class="legend">
-    <span><span class="swatch" style="background:#2ca02c"></span> Flooded Area (m²)</span>
-    <span><span class="swatch" style="background:#1f77b4"></span> Rainfall (mm)</span>
-    <span><span class="swatch" style="background:#d62728"></span> Water Depth (mm)</span>
+  <div class="study-area">
+    <img src="images/study_area.png" alt="Study Area Map">
   </div>
 
-  <div id="summary" class="note"></div>
-  <div id="tableContainer"></div>
+  <div class="grid">
+    <div>
+      <label>Total rainfall depth (mm)</label>
+      <input id="totalRainfall" type="number" min="0" step="0.01" value="200">
+    </div>
+    <div>
+      <label>Storm duration (hours)</label>
+      <input id="stormDuration" type="number" min="0.01" step="0.01" value="5">
+    </div>
+    <div>
+      <label>Number of timesteps (integer)</label>
+      <input id="timesteps" type="number" min="1" step="1" value="10">
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button id="simulateBtn">Simulate</button>
+    <button onclick="window.location.href='custom_simulation.html'">Custom Simulation</button>
+  </div>
+
+  <div class="results">
+    <canvas id="chartFloodedArea"></canvas>
+    <canvas id="chartOtherOutputs"></canvas>
+
+    <div class="legend">
+      <span><span class="swatch" style="background:#2ca02c"></span> Flooded Area (m²)</span>
+      <span><span class="swatch" style="background:#1f77b4"></span> Rainfall (mm)</span>
+      <span><span class="swatch" style="background:#d62728"></span> Water Depth (mm)</span>
+    </div>
+
+    <div id="summary" class="note"></div>
+    <div id="tableContainer"></div>
+  </div>
 </div>
 
-<script>
-(function(){
-  const $ = id => document.getElementById(id);
-  const simulateBtn = $('simulateBtn');
-  const chartFloodedArea = $('chartFloodedArea');
-  const chartOtherOutputs = $('chartOtherOutputs');
-  const tableContainer = $('tableContainer');
-  const summary = $('summary');
+<script src="js/simulation.js"></script>
 
-  function validateInputs(vals){
-    const { totalArea, totalRainfall, stormDuration, timesteps, canalLength, canalWidth, canalHeight, canalSlope } = vals;
-    if (!(totalArea>0)) return "Total area must be positive.";
-    if (!(totalRainfall>=0)) return "Total rainfall must be >= 0.";
-    if (!(stormDuration>0)) return "Storm duration must be positive.";
-    if (!(timesteps >= 1 && Number.isInteger(timesteps))) return "Timesteps must be a positive integer.";
-    if (!(canalLength>0 && canalWidth>0 && canalHeight>0)) return "Canal dimensions must be positive.";
-    if (!(canalSlope>0)) return "Canal slope must be positive.";
-    return null;
-  }
-
-  function manningOutflow(width, depth, slope, n, timestepHours){
-    if (depth <= 0) return 0;
-    const A = width * depth;
-    const P = width + 2 * depth;
-    const R = A / P;
-    const Q = (1/n) * A * Math.pow(R, 2/3) * Math.sqrt(slope); // m³/s
-    return Q * timestepHours * 3600; // convert to m³ per timestep
-  }
-
-  function runSimulation(vals){
-    const { totalArea, totalRainfall, stormDuration, timesteps, canalLength, canalWidth, canalHeight, canalSlope } = vals;
-    const timestepHours = stormDuration / timesteps;
-    const runoffC = 0.61;
-
-    // Time of concentration
-    const L = canalLength;
-    const slope = canalSlope;
-    const Tc = 0.01947 * Math.pow(L,0.77) * Math.pow(slope,-0.385); // minutes
-    const Tc_hours = Tc / 60;
-
-    // Triangular hyetograph
-    const rainfall = [];
-    const peakTime = Tc_hours; 
-    const totalStormTime = stormDuration;
-    for(let t=0; t<timesteps; t++){
-        const tMid = t * timestepHours + timestepHours/2;
-        let intensityFactor;
-        if(tMid <= peakTime) intensityFactor = tMid / peakTime;
-        else intensityFactor = (totalStormTime - tMid) / (totalStormTime - peakTime);
-        intensityFactor = Math.max(0, intensityFactor);
-        rainfall.push(totalRainfall * intensityFactor * timestepHours / (0.5 * totalStormTime));
-    }
-
-    const water_depth = [];
-    const flooded_area = [];
-    const canalOutflowPerTimestep = manningOutflow(canalWidth, canalHeight, canalSlope, 0.015, timestepHours);
-
-    for(let t=0; t<timesteps; t++){
-        const prevDepth = t===0 ? 0 : water_depth[t-1];
-        const inflowVol = (rainfall[t]/1000) * totalArea * runoffC + prevDepth/1000*totalArea;
-        const outflowVol = Math.min(canalOutflowPerTimestep, inflowVol);
-        const excessVol = inflowVol - outflowVol;
-        const waterDepth = (excessVol / totalArea) * 1000;
-        water_depth.push(waterDepth);
-
-        let area = (waterDepth / 30) * (0.5 * totalArea);
-        if(area>totalArea) area = totalArea;
-        flooded_area.push(area);
-    }
-
-    const rows = [];
-    for(let t=0; t<timesteps; t++){
-        let severity = "None";
-        const wd = water_depth[t];
-        if (wd>=30) severity="Severe";
-        else if (wd>=20) severity="Moderate";
-        else if (wd>=10) severity="Minor";
-        rows.push({
-            Hour: ((t+1)*timestepHours).toFixed(2),
-            Rainfall: Number(rainfall[t].toFixed(2)),
-            // CanalOutflow removed from display
-            WaterDepth: Number(water_depth[t].toFixed(2)),
-            FloodedArea: Number(flooded_area[t].toFixed(2)),
-            FloodSeverity: severity
-        });
-    }
-
-    const rainfallIntensityAvg = rainfall.reduce((a,b)=>a+b,0)/stormDuration;
-
-    return { rows, meta: { rainfallIntensity: +rainfallIntensityAvg.toFixed(2), Tc: +Tc_hours.toFixed(2), C: runoffC },
-             series: { rainfall, water_depth, flooded_area, canalOutflow: Array(timesteps).fill(canalOutflowPerTimestep), timestepHours } };
-  }
-
-  function renderTable(rows){
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    const columns = Object.keys(rows[0]);
-    columns.forEach(c=>{ const th = document.createElement('th'); th.textContent=c; headerRow.appendChild(th); });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
-    rows.forEach(r=>{
-      const tr = document.createElement('tr');
-      columns.forEach(c=>{
-        const td = document.createElement('td');
-        td.textContent = r[c];
-        tr.appendChild(td);
-      });
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    tableContainer.innerHTML = '';
-    tableContainer.appendChild(table);
-  }
-
-  function drawChart(canvas, seriesToDraw, timestepHours=1){
-    const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = canvas.clientWidth * dpr;
-    canvas.height = canvas.clientHeight * dpr;
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
-
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const padding = {left:48, right:48, top:24, bottom:40};
-    const n = seriesToDraw[Object.keys(seriesToDraw)[0]].length;
-    const labels = Array.from({length:n}, (_,i)=>((i+1)*timestepHours).toFixed(1));
-    const maxY = Math.max(...[].concat(...Object.values(seriesToDraw))) * 1.1 || 10;
-
-    function xPos(i){ return padding.left + ((width - padding.left - padding.right) * (i) / Math.max(1,n-1)); }
-    function yPos(val){ return padding.top + ((height - padding.top - padding.bottom)*(1 - (val / maxY))); }
-
-    ctx.strokeStyle = "#eee"; ctx.lineWidth=1; ctx.beginPath();
-    const gridCount = 6;
-    for(let g=0; g<=gridCount; g++){
-      const y = padding.top + (height - padding.top - padding.bottom)*(g/gridCount);
-      ctx.moveTo(padding.left, y); ctx.lineTo(width - padding.right, y);
-    }
-    ctx.stroke();
-
-    ctx.strokeStyle="#444"; ctx.lineWidth=1.2; ctx.beginPath();
-    ctx.moveTo(padding.left, padding.top); ctx.lineTo(padding.left, height-padding.bottom);
-    ctx.lineTo(width-padding.right, height-padding.bottom);
-    ctx.stroke();
-
-    ctx.fillStyle="#333"; ctx.font="12px system-ui"; ctx.textAlign="right";
-    for(let g=0; g<=gridCount; g++){
-      const val = (maxY*(gridCount-g)/gridCount);
-      const y = padding.top + (height-padding.top-padding.bottom)*(g/gridCount);
-      ctx.fillText(Math.round(val), padding.left-8, y+4);
-    }
-
-    ctx.textAlign="center";
-    for(let i=0;i<n;i+=Math.ceil(n/10)||1){ ctx.fillText(labels[i]+"h", xPos(i), height-padding.bottom+16); }
-
-    function drawLine(data,color){
-      ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.8;
-      for(let i=0;i<data.length;i++){
-        const x=xPos(i), y=yPos(data[i]);
-        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      }
-      ctx.stroke();
-      for(let i=0;i<data.length;i++){
-        const x=xPos(i), y=yPos(data[i]);
-        ctx.beginPath(); ctx.fillStyle=color; ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
-      }
-    }
-
-    const colors = {rainfall:"#1f77b4", WaterDepth:"#d62728", flooded_area:"#2ca02c"}; // canalOutflow hidden
-    for(const key in seriesToDraw){ 
-      if(key==="canalOutflow") continue; // skip drawing canal outflow
-      drawLine(seriesToDraw[key], colors[key]); 
-    }
-
-    ctx.fillStyle="#111"; ctx.font="14px system-ui"; ctx.textAlign="left";
-    ctx.fillText("Urban Flood Simulation", padding.left, 16);
-  }
-
-  simulateBtn.addEventListener('click', ()=>{
-  const vals = {
-    totalArea: 19274.25, // study area constant
-    totalRainfall: parseFloat($('totalRainfall').value),
-    stormDuration: parseFloat($('stormDuration').value),
-    timesteps: parseInt($('timesteps').value,10),
-    canalLength: 176.16,   // fixed value
-    canalWidth: 0.3045,    // fixed value
-    canalHeight: 0.33,     // fixed value
-    canalSlope: 0.01047    // fixed value
-  };
-    const err = validateInputs(vals);
-    if(err){ alert(err); return; }
-
-    simulateBtn.disabled=true;
-    const result=runSimulation(vals);
-    renderTable(result.rows);
-
-    drawChart(chartFloodedArea, {flooded_area: result.series.flooded_area}, result.series.timestepHours);
-    drawChart(chartOtherOutputs, {rainfall: result.series.rainfall, WaterDepth: result.series.water_depth}, result.series.timestepHours);
-
-    summary.innerHTML=`Runoff coefficient (C): <strong>${result.meta.C}</strong>, Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>, Average Rainfall Intensity: <strong>${result.meta.rainfallIntensity.toFixed(2)} mm/h</strong>`;
-
-    setTimeout(()=>simulateBtn.disabled=false,250);
-  });
-
-  drawChart(chartFloodedArea, {flooded_area:[]});
-  drawChart(chartOtherOutputs, {rainfall:[], WaterDepth:[]});
-})();
-</script>
-
-</div>
 <footer>
   <p>&copy; 2025 Urban Flood Simulation Tool | Developed for academic and planning use</p>
 </footer>
 
+</body>
 </html>
