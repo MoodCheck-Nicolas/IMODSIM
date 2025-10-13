@@ -71,16 +71,20 @@
     return Q * timestepHours * 3600; // convert to m³ per timestep
   }
 
-  function calculateWeightedC(){
-    let totalAreaSum = 0;
-    let weightedSum = 0;
-    for(const lu of landUses){
-      const area = parseFloat(lu.areaInput.value);
-      totalAreaSum += area;
-      weightedSum += area * lu.cValue;
-    }
-    return totalAreaSum>0 ? (weightedSum/totalAreaSum) : 0;
+function calculateWeightedC(){
+  let totalAreaSum = 0;
+  let weightedSum = 0;
+  for(const lu of landUses){
+    const area = parseFloat(lu.areaInput.value);
+    totalAreaSum += area;
+    weightedSum += area * lu.cValue;
   }
+  if(totalAreaSum > 0){
+    return parseFloat((weightedSum / totalAreaSum).toFixed(2)); // round to nearest hundredth
+  } else {
+    return null; // or 0 if you prefer
+  }
+}
 
   function runSimulation(vals){
     const { totalArea, totalRainfall, stormDuration, timesteps, canalLength, canalWidth, canalHeight, canalSlope } = vals;
@@ -230,7 +234,6 @@
     }
 
     ctx.fillStyle="#111"; ctx.font="14px system-ui"; ctx.textAlign="left";
-    ctx.fillText("Urban Flood Simulation", padding.left, 16);
   }
 
   simulateBtn.addEventListener('click', ()=>{

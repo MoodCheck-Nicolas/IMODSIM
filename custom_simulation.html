@@ -19,8 +19,6 @@
     </nav>
   </div>
 
-  
-
 </header>
 <body>
 
@@ -30,7 +28,7 @@
 
 <div class="grid">
     <div>
-    <label>Total rainfall depth (m²)</label>
+    <label>Total area</label>
     <input id="totalArea" type="number" min="0" step="0.01" value="19275.25">
   </div>
   
@@ -73,7 +71,7 @@
     <option value="0.50">Multi-unit detached</option>
     <option value="0.675">Multi-unit attached</option>
     <option value="0.75">Industrial heavy areas</option>
-    <option value="0.90">Asphalt streets</option>
+    <option value="0.95">Asphalt streets</option>
     <option value="0.95">Concrete streets</option>
     <option value="0.10">Parks, cemeteries</option>
     <option value="0.20">Playgrounds</option>
@@ -90,7 +88,7 @@
     <option value="0.20">Smooth soil</option>
     <option value="0.30">Rough soil</option>
     <option value="0.20">Cultivated rows</option>
-    <option value="0.50">Heavy soil (Average)</option>
+    <option value="0.22">Heavy soil (Average)</option>
     <option value="0.60">Heavy soil, no crop</option>
     <option value="0.50">Heavy soil, with crop</option>
     <option value="0.60">Sandy soil, no crop</option>
@@ -112,7 +110,6 @@
   <button onclick="window.location.href='index.html'">Magtoto Compound Simulation</button>
 </div>
 
-
 <div class="results">
   <canvas id="chartFloodedArea"></canvas>
   <canvas id="chartOtherOutputs"></canvas>
@@ -127,50 +124,9 @@
   <div id="tableContainer"></div>
 </div>
 
-<script>
-const landUseContainer = document.getElementById('landUseContainer');
-const landUses = [];
-
-document.getElementById('addLandUseBtn').addEventListener('click', () => {
-  const select = document.getElementById('landUseType');
-  const typeText = select.options[select.selectedIndex].text;
-  const cValue = parseFloat(select.value);
-
-  // Create a new entry div
-  const entryDiv = document.createElement('div');
-  entryDiv.classList.add('land-use-entry');
-
-  // Create input for area
-  const areaInput = document.createElement('input');
-  areaInput.type = 'number';
-  areaInput.min = '0';
-  areaInput.step = '1';
-  areaInput.placeholder = 'Area (m²)';
-
-  // Create label for land use type
-  const label = document.createElement('span');
-  label.textContent = typeText;
-
-  // Create remove button
-  const removeBtn = document.createElement('button');
-  removeBtn.textContent = 'X';
-  removeBtn.classList.add('remove-btn');
-  removeBtn.addEventListener('click', () => {
-    landUseContainer.removeChild(entryDiv);
-  });
-
-  entryDiv.appendChild(label);
-  entryDiv.appendChild(areaInput);
-  entryDiv.appendChild(removeBtn);
-  landUseContainer.appendChild(entryDiv);
-
-  // Optional: store this entry in landUses array if needed
-  landUses.push({ type: typeText, cValue, areaInput });
-});
-
 </script>
 
-<script src="js/simulation.js"></script>
+<script src="js/custom_simulation.js"></script>
 
 </div>
 <footer>
