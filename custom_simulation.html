@@ -86,7 +86,7 @@ footer {
 <header>
   <div class="header-content">
     <div class="logo">
-      <span class="title">Rainfall Duration-Drainage Capacity Model for Urban Flooding</span>
+      <span class="title">Rainfall Duration-Drainage Capacity Model for Urban Flooding [Custom Simulation]</span>
     </div>
     <nav>
       <a href="index.html">Home</a>
@@ -95,6 +95,7 @@ footer {
       <a href="faq.html">FAQ</a>
     </nav>
   </div>
+
 </header>
 <body>
 
@@ -103,7 +104,11 @@ footer {
 <p class="note">Enter inputs, click <strong>Simulate</strong>. Drainage outflow is calculated using Manning formula (concrete canal, n=0.015). Runoff coefficient and time of concentration are included.</p>
 
 <div class="grid">
-
+    <div>
+    <label>Total rainfall depth (m²)</label>
+    <input id="totalArea" type="number" min="0" step="0.01" value="19275.25">
+  </div>
+  
   <div>
     <label>Total rainfall depth (mm)</label>
     <input id="totalRainfall" type="number" min="0" step="0.01" value="200">
@@ -132,12 +137,14 @@ footer {
     <label>Canal slope (m/m)</label>
     <input id="canalSlope" type="number" min="0.001" step="0.001" value="0.01047">
   </div>
+ 
 </div>
 
 <div style="margin-top:12px; display:flex; gap:10px;">
   <button id="simulateBtn">Simulate</button>
-  <button onclick="window.location.href='custom.html'">Custom Simulation</button>
+  <button onclick="window.location.href='index.html'">Magtoto Compound Simulation</button>
 </div>
+
 
 <div class="results">
   <canvas id="chartFloodedArea"></canvas>
@@ -335,30 +342,32 @@ footer {
   }
 
   simulateBtn.addEventListener('click', ()=>{
-    const vals = {
-      totalArea: parseFloat($('totalArea').value),
-      totalRainfall: parseFloat($('totalRainfall').value),
-      stormDuration: parseFloat($('stormDuration').value),
-      timesteps: parseInt($('timesteps').value,10),
-      canalLength: parseFloat($('canalLength').value),
-      canalWidth: parseFloat($('canalWidth').value),
-      canalHeight: parseFloat($('canalHeight').value),
-      canalSlope: parseFloat($('canalSlope').value)
-    };
+  const vals = {
+  totalArea: parseFloat($('totalArea').value), // if you have an input for area
+  totalRainfall: parseFloat($('totalRainfall').value),
+  stormDuration: parseFloat($('stormDuration').value),
+  timesteps: parseInt($('timesteps').value,10),
+  canalLength: parseFloat($('canalLength').value),
+  canalWidth: parseFloat($('canalWidth').value),
+  canalHeight: parseFloat($('canalHeight').value),
+  canalSlope: parseFloat($('canalSlope').value)
+};
     const err = validateInputs(vals);
-    if(err){ alert(err); return; }
+  if(err){ alert(err); return; }
 
-    simulateBtn.disabled=true;
-    const result=runSimulation(vals);
-    renderTable(result.rows);
+  simulateBtn.disabled = true;
+  const result = runSimulation(vals);
+  renderTable(result.rows);
 
-    drawChart(chartFloodedArea, {flooded_area: result.series.flooded_area}, result.series.timestepHours);
-    drawChart(chartOtherOutputs, {rainfall: result.series.rainfall, WaterDepth: result.series.water_depth}, result.series.timestepHours);
+  drawChart(chartFloodedArea, {flooded_area: result.series.flooded_area}, result.series.timestepHours);
+  drawChart(chartOtherOutputs, {rainfall: result.series.rainfall, WaterDepth: result.series.water_depth}, result.series.timestepHours);
 
-    summary.innerHTML=`Runoff coefficient (C): <strong>${result.meta.C}</strong>, Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>, Average Rainfall Intensity: <strong>${result.meta.rainfallIntensity.toFixed(2)} mm/h</strong>`;
+  summary.innerHTML = `Runoff coefficient (C): <strong>${result.meta.C}</strong>, 
+  Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>, 
+  Average Rainfall Intensity: <strong>${result.meta.rainfallIntensity.toFixed(2)} mm/h</strong>`;
 
-    setTimeout(()=>simulateBtn.disabled=false,250);
-  });
+  setTimeout(()=>simulateBtn.disabled=false,250);
+});
 
   drawChart(chartFloodedArea, {flooded_area:[]});
   drawChart(chartOtherOutputs, {rainfall:[], WaterDepth:[]});
