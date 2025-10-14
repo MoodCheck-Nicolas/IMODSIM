@@ -185,12 +185,12 @@ canvas {
     }
 }
 .land-use {
-    margin-top: 12px; /* adds spacing above */
+    margin-top: 12px;
     display: flex;
     gap: 8px;
     align-items: center;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; /* same font as others */
-    font-size: 14px; /* adjust to match other inputs */
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; 
+    font-size: 14px; 
 }
 
 .land-use select,
@@ -203,7 +203,7 @@ canvas {
     border: 1px solid #ccc;
 }
 
-.land-use-entry { 
+    .land-use-entry { 
         display: flex; align-items: center; gap: 10px; margin-top: 10px; 
     }
     .land-use-entry input { 
