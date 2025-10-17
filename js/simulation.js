@@ -8,7 +8,7 @@
   function validateInputs(vals){
     const { totalArea, totalRainfall, stormDuration, timesteps, canalLength, canalWidth, canalHeight, canalSlope } = vals;
     if (!(totalArea>0)) return "Total area must be positive.";
-    if (!(totalRainfall>=0)) return "Total rainfall must be >= 0.";
+    if (!(totalRainfall>0)) return "Total rainfall must be > 0.";
     if (!(stormDuration>0)) return "Storm duration must be positive.";
     if (!(timesteps >= 1 && Number.isInteger(timesteps))) return "Timesteps must be a positive integer.";
     if (!(canalLength>0 && canalWidth>0 && canalHeight>0)) return "Canal dimensions must be positive.";
@@ -34,6 +34,9 @@
     const Tc = 0.01947 * Math.pow(L,0.77) * Math.pow(slope,-0.385);
     const Tc_hours = Tc / 60;
 
+    // Max canal capacity
+    const canalMaxVolume = canalLength * canalWidth * canalHeight;
+
     // Triangular hyetograph
     const rainfall = [];
     const peakTime = Math.min(Tc_hours, stormDuration*0.5);
@@ -50,7 +53,8 @@
     }
 
     const water_depth = [];                 
-    let previous_ponded_m3 = 0;             
+    let canalStorage_m3 = 0;   // water inside canal
+    let surfaceFlood_m3 = 0;   // water above canal
 
     for(let t=0; t<timesteps; t++){
         const rain_m = rainfall[t] / 1000;
@@ -59,25 +63,28 @@
         // runoff generated
         const runoffVolume_m3 = runoffC * rainVolume_m3;
 
-        // total available (previous ponding + new runoff)
-        const available_m3 = previous_ponded_m3 + runoffVolume_m3;
+        // add to total water
+        let totalIncoming = runoffVolume_m3 + canalStorage_m3 + surfaceFlood_m3;
 
-        // compute depth if all available water were in canal
-        const canalSurfaceArea_m2 = canalWidth * canalLength;
-        const canalDepth_if_all_m = canalSurfaceArea_m2 > 0 ? (available_m3 / canalSurfaceArea_m2) : 0;
-        const flowDepthForManning_m = Math.min(canalDepth_if_all_m, canalHeight);
+        // split between canal and surface
+        canalStorage_m3 = Math.min(totalIncoming, canalMaxVolume);
+        surfaceFlood_m3 = totalIncoming - canalStorage_m3;
 
-        const canalOutflowPerTimestep = manningOutflow(canalWidth, flowDepthForManning_m, canalSlope, 0.015, timestepHours);
+        // Manning outflow (limited to canal depth)
+        const flowDepthForManning_m = canalStorage_m3 / (canalLength * canalWidth);
+        const canalOutflowPerTimestep = manningOutflow(canalWidth, Math.min(flowDepthForManning_m, canalHeight), canalSlope, 0.015, timestepHours);
 
-        // actual outflow limited by available
-        const actualOutflow_m3 = Math.min(canalOutflowPerTimestep, available_m3);
+        // actual outflow cannot exceed water stored in canal
+        const actualOutflow_m3 = Math.min(canalOutflowPerTimestep, canalStorage_m3);
 
-        // leftover becomes ponded
-        const leftover_m3 = available_m3 - actualOutflow_m3;
-        previous_ponded_m3 = leftover_m3;
+        // update canal & flood storage
+        canalStorage_m3 -= actualOutflow_m3;
+        // surfaceFlood_m3 remains as is (no quick outflow assumed)
 
-        // water depth over catchment (mm)
-        const waterDepth_m = leftover_m3 / totalArea;
+        // compute flood depth over flood-prone area (not whole catchment)
+        const floodAreaFactor = 0.2; // 20% of total area floods
+        const floodArea = totalArea * floodAreaFactor;
+        const waterDepth_m = surfaceFlood_m3 / floodArea;
         const waterDepth_mm = waterDepth_m * 1000;
 
         water_depth.push(+waterDepth_mm.toFixed(2));
@@ -87,9 +94,9 @@
     for(let t=0; t<timesteps; t++){
         const wd = water_depth[t];
         let severity = "None";
-        if (wd>=30) severity="Severe";
-        else if (wd>=20) severity="Moderate";
-        else if (wd>=10) severity="Minor";
+        if (wd>=300) severity="Severe";   // >30 cm
+        else if (wd>=200) severity="Moderate"; // >20 cm
+        else if (wd>=100) severity="Minor";    // >10 cm
 
         rows.push({
             Hour: ((t+1)*timestepHours).toFixed(2),
@@ -228,16 +235,13 @@
     const result = runSimulation(vals);
     renderTable(result.rows);
 
-    // only plot rainfall and water depth
     drawChart(chartOtherOutputs, {rainfall: result.series.rainfall, water_depth: result.series.water_depth}, result.series.timestepHours);
 
-    summary.innerHTML = `Average Rainfall Intensity: <strong>${result.meta.rainfallIntensity} mm/h</strong>, 
-    Runoff coefficient (C): <strong>${result.meta.C}</strong>, 
+    summary.innerHTML = `Runoff coefficient (C): <strong>${result.meta.C}</strong>, 
     Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>`;
 
     setTimeout(()=>simulateBtn.disabled=false,250);
   });
 
-  // initial empty chart
   drawChart(chartOtherOutputs, {rainfall:[], water_depth:[]});
 })();
