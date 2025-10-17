@@ -94,9 +94,11 @@
     for(let t=0; t<timesteps; t++){
         const wd = water_depth[t];
         let severity = "None";
-        if (wd>=300) severity="Severe";   // >30 cm
-        else if (wd>=200) severity="Moderate"; // >20 cm
-        else if (wd>=100) severity="Minor";    // >10 cm
+        if (wd>=300) severity="Extreme Flooding";   // >30 cm
+        else if (wd>=301) severity="Severe Flooding"; // >20 cm
+        else if (wd>=151) severity="Moderate Flooding";    // >10 cm
+        else if (wd>=51) severity="Minor Flooding";    // >10 cm
+        else if (wd>=0) severity="No flooding";    // >10 cm
 
         rows.push({
             Hour: ((t+1)*timestepHours).toFixed(2),
