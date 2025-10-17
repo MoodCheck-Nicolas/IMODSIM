@@ -134,7 +134,7 @@
         });
     }
 
-    const rainfallIntensityAvg = rainfall.reduce((a,b)=>a+b,0)/stormDuration;
+    const rainfallIntensityAvg = totalRainfall / stormDuration;
 
     return { rows, meta: { rainfallIntensity: +rainfallIntensityAvg.toFixed(2), Tc: +Tc_hours.toFixed(2), C: runoffC },
              series: { rainfall, water_depth, timestepHours } };
@@ -145,9 +145,12 @@
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
     const columns = Object.keys(rows[0]);
-    columns.forEach(c=>{ const th = document.createElement('th'); th.textContent=c; headerRow.appendChild(th); });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
+    columns.forEach(c=>{ 
+      const th = document.createElement('th'); 
+      th.textContent=c; 
+      headerRow.appendChild(th); });
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
 
     const tbody = document.createElement('tbody');
     rows.forEach(r=>{
@@ -219,7 +222,8 @@
     }
 
     const colors = {rainfall:"#1f77b4", WaterDepth:"#d62728"}; 
-    for(const key in seriesToDraw){ drawLine(seriesToDraw[key], colors[key] || "#000"); }
+    for(const key in seriesToDraw){ 
+      drawLine(seriesToDraw[key], colors[key] || "#000"); }
 
     ctx.fillStyle="#111"; ctx.font="14px system-ui"; ctx.textAlign="left";
   }
@@ -245,9 +249,9 @@
 
     drawChart(chartOtherOutputs, {rainfall: result.series.rainfall, WaterDepth: result.series.water_depth}, result.series.timestepHours);
 
-    summary.innerHTML = `Runoff coefficient (C): <strong>${result.meta.C}</strong>, 
-    Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>, 
-    Average Rainfall Intensity: <strong>${result.meta.rainfallIntensity.toFixed(2)} mm/h</strong>`;
+    summary.innerHTML = `Average Rainfall Intensity: <strong>${result.meta.rainfallIntensity} mm/h</strong>, 
+    Runoff coefficient (C): <strong>${result.meta.C}</strong>, 
+    Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>`;
 
     setTimeout(()=>simulateBtn.disabled=false,250);
   });

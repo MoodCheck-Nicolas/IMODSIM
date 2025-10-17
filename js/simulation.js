@@ -126,8 +126,6 @@
     columns.forEach(c=>{
       const th = document.createElement('th');
       th.textContent=c;
-      th.style.border='1px solid #ddd';
-      th.style.padding='6px';
       headerRow.appendChild(th);
     });
     thead.appendChild(headerRow);
@@ -139,8 +137,6 @@
       columns.forEach(c=>{
         const td = document.createElement('td');
         td.textContent = r[c];
-        td.style.border='1px solid #eee';
-        td.style.padding='6px';
         tr.appendChild(td);
       });
       tbody.appendChild(tr);
@@ -210,7 +206,7 @@
     const colors = {rainfall:"#1f77b4", WaterDepth:"#d62728"};
     for(const key in seriesToDraw){
       const mapKey = key === 'water_depth' ? 'WaterDepth' : key;
-      drawLine(seriesToDraw[key], colors[mapKey] || '#333');
+      drawLine(seriesToDraw[key], colors[mapKey] || '#000');
     }
   }
 
@@ -235,7 +231,9 @@
     // only plot rainfall and water depth
     drawChart(chartOtherOutputs, {rainfall: result.series.rainfall, water_depth: result.series.water_depth}, result.series.timestepHours);
 
-    summary.innerHTML = `Average Rainfall Intensity: <strong>${result.meta.rainfallIntensity} mm/h</strong>, Runoff coefficient (C): <strong>${result.meta.C}</strong>, Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>`;
+    summary.innerHTML = `Average Rainfall Intensity: <strong>${result.meta.rainfallIntensity} mm/h</strong>, 
+    Runoff coefficient (C): <strong>${result.meta.C}</strong>, 
+    Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>`;
 
     setTimeout(()=>simulateBtn.disabled=false,250);
   });
