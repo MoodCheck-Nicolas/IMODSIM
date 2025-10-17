@@ -6,6 +6,7 @@
 <title>Rainfall Duration–Manning Drainage Model (Urban Areas)</title>
 <link rel = "stylesheet" href = "css/style.css">
 </head>
+<body>
 <header>
   <div class="header-content">
     <div class="logo">
@@ -20,10 +21,10 @@
   </div>
 
 </header>
-<body>
+
 
 <div class="main-content">
-
+<div class="bluer-box">
 <div class="grid">
     <div>
     <label>Total area</label>
@@ -98,17 +99,18 @@
   </select>
   <button type="button" id="addLandUseBtn">Add Land Use</button>
 </div>
+</div>
 
 <div id="landUseContainer">
-  <!-- Dynamically added land use area inputs will appear here -->
+  
 </div>
 
 <div style="margin-top:12px; display:flex; gap:10px;">
   <button id="simulateBtn">Simulate</button>
 </div>
+<div class="blue-box">
 
 <div class="results">
-  <canvas id="chartFloodedArea"></canvas>
   <canvas id="chartOtherOutputs"></canvas>
 
   <div class="legend">
@@ -120,14 +122,17 @@
   <div id="summary" class="note"></div>
   <div id="tableContainer"></div>
 </div>
+</div>
 
 </script>
 
 <script src="js/custom_simulation.js"></script>
 
 </div>
+
 <footer>
   <p>&copy; 2025 Urban Flood Simulation Tool | Developed for academic and planning use</p>
 </footer>
+</body>
 
 </html>

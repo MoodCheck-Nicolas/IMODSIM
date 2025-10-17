@@ -4,25 +4,36 @@ body {
     margin: 0;
     padding: 0;
     background-color: #fcfcfc;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
 }
 
 h1 { 
-    font-size:1.3rem; margin:0; 
+    font-size:1.3rem; 
+    margin:0; 
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: white;
 }
 
 .main-content {
-    max-width: 70%; 
-    margin: 0 auto;
+    flex: 1;            
+    width: 100%;         
+    max-width: 1200px;   
+    margin: 0 auto;      
     padding: 0 16px;
 }
 
 header {
     background: #0c2136;
-    padding: 1.5% 1.5%;
+    padding: 1.5%;
     border-radius: 6px;
     margin-bottom: 20px;
     color: #fff;
-    transition: all 0.3s ease;
 }
 
 .header-content {
@@ -46,17 +57,15 @@ header {
 .logo .title {
     font-size: 1.2rem;
     font-weight: 600;
-    transition: font-size 0.3s ease;
 }
 
 nav {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 25px;
 }
 
 nav a {
-    margin-left: 20px;
     text-decoration: none;
     font-size: 0.95rem;
     color: #e0f2f1;
@@ -71,20 +80,24 @@ footer {
     background: #0c2136;
     color: #eee;
     text-align: center;
-    padding: 1.5% 1.5%;
-    border-radius: 6px;
+    padding: 1.5%;
     font-size: 0.9rem;
-    margin-top: 30px;
+    margin-top: auto; 
+    margin-top: 20px;
+    border-radius: 6px;
 }
 
 .grid {
+    color: white;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap:12px;
 }
 
 label { 
-    display:block; font-size:0.85rem; margin-bottom:4px; 
+    display:block; 
+    font-size:0.85rem; 
+    margin-bottom:4px; 
 }
 
 input[type="number"] {
@@ -96,22 +109,20 @@ input[type="number"] {
 }
 
 button {
-    margin-top: 10px;
+    margin-top: 20px;
     padding:10px 14px;
     border-radius:8px;
     border: none;
-    background:#0b79d0;
+    background:#008616;
     color:#fff;
     cursor:pointer;
 }
 
 button:disabled { 
-    opacity:.5
+    opacity:.5;
 }
 
-.results { 
-    margin-top:18px; 
-}
+.results { margin-top:18px; }
 
 table {
     width:100%;
@@ -121,14 +132,31 @@ table {
 }
 
 th,td { 
-    border:1px solid #ddd; padding:6px 8px; text-align:center; 
+    border:1px solid #ddd; 
+    padding:6px 8px; 
+    text-align:center; 
 }
-  
-th{ 
-    background:#f4f4f4; 
+
+th { background:#f4f4f4; }
+
+.blue-box, .bluer-box {
+    border: 2px solid #0e2f49; 
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.blue-box { background: #1f4163; margin-top: 1%; }
+.bluer-box { background: #0a1d2f; margin-top: 1%; }
+
+.blue-box label { 
+    color: #0c2136; 
+    font-weight: 500; 
 }
 
 .legend {
+    color: white;
     display:flex;
     gap:12px;
     margin-top:8px;
@@ -165,37 +193,27 @@ canvas {
     margin-bottom:20px;
     border: 10px solid transparent;
     padding: 15px;
+    color: black;
 }
 
 .study-area img {
     max-width:100%;
     height:auto;
     border-radius:8px;
+    box-shadow: 0 0 0 5px rgb(0, 0, 0), 0 0 0 10px rgb(41, 41, 41);
 }
 
-@media (max-width: 768px) {
-    .logo .title { 
-        font-size: 1rem; 
-    }
-    nav a { 
-        font-size:0.85rem; margin-left:10px; 
-    }
-    header { 
-        padding:1% 1%; 
-    }
-}
 .land-use {
     margin-top: 12px;
     display: flex;
     gap: 8px;
     align-items: center;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; 
     font-size: 14px; 
 }
 
 .land-use select,
 .land-use button {
-        margin-top: 5px;
+    margin-top: 5px;
     font-family: inherit;
     font-size: inherit;
     padding: 7px 10px;
@@ -203,12 +221,19 @@ canvas {
     border: 1px solid #ccc;
 }
 
-    .land-use-entry { 
-        display: flex; align-items: center; gap: 10px; margin-top: 10px; 
-    }
-    .land-use-entry input { 
-        width: 100px; 
-    }
-    .remove-btn { 
-        cursor: pointer; color: red; font-weight: bold; border: none; background: none; 
-    }
+.land-use-entry { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    margin-top: 10px; 
+}
+
+.land-use-entry input { width: 100px; }
+
+.remove-btn { 
+    cursor: pointer; 
+    color: red; 
+    font-weight: bold; 
+    border: none; 
+    background: none; 
+}

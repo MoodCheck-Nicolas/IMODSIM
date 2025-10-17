@@ -1,15 +1,12 @@
-
-
 (function(){
   const $ = id => document.getElementById(id);
   const simulateBtn = $('simulateBtn');
-  const chartFloodedArea = $('chartFloodedArea');
   const chartOtherOutputs = $('chartOtherOutputs');
   const tableContainer = $('tableContainer');
   const summary = $('summary');
   const landUseContainer = $('landUseContainer');
 
-  const landUses = []; // store {type, cValue, areaInput} objects
+  const landUses = []; 
 
   // Add land use entry dynamically
   $('addLandUseBtn').addEventListener('click', () => {
@@ -71,25 +68,25 @@
     return Q * timestepHours * 3600; // convert to m³ per timestep
   }
 
-function calculateWeightedC(){
-  let totalAreaSum = 0;
-  let weightedSum = 0;
-  for(const lu of landUses){
-    const area = parseFloat(lu.areaInput.value);
-    totalAreaSum += area;
-    weightedSum += area * lu.cValue;
+  function calculateWeightedC(){
+    let totalAreaSum = 0;
+    let weightedSum = 0;
+    for(const lu of landUses){
+      const area = parseFloat(lu.areaInput.value);
+      totalAreaSum += area;
+      weightedSum += area * lu.cValue;
+    }
+    if(totalAreaSum > 0){
+      return parseFloat((weightedSum / totalAreaSum).toFixed(2));
+    } else {
+      return null;
+    }
   }
-  if(totalAreaSum > 0){
-    return parseFloat((weightedSum / totalAreaSum).toFixed(2)); // round to nearest hundredth
-  } else {
-    return null; // or 0 if you prefer
-  }
-}
 
   function runSimulation(vals){
     const { totalArea, totalRainfall, stormDuration, timesteps, canalLength, canalWidth, canalHeight, canalSlope } = vals;
     const timestepHours = stormDuration / timesteps;
-    const runoffC = calculateWeightedC(); // use weighted C from user inputs
+    const runoffC = calculateWeightedC();
 
     // Time of concentration
     const L = canalLength;
@@ -111,7 +108,6 @@ function calculateWeightedC(){
     }
 
     const water_depth = [];
-    const flooded_area = [];
     const canalOutflowPerTimestep = manningOutflow(canalWidth, canalHeight, canalSlope, 0.015, timestepHours);
 
     for(let t=0; t<timesteps; t++){
@@ -121,10 +117,6 @@ function calculateWeightedC(){
         const excessVol = inflowVol - outflowVol;
         const waterDepth = (excessVol / totalArea) * 1000;
         water_depth.push(waterDepth);
-
-        let area = (waterDepth / 30) * (0.5 * totalArea);
-        if(area>totalArea) area = totalArea;
-        flooded_area.push(area);
     }
 
     const rows = [];
@@ -136,9 +128,8 @@ function calculateWeightedC(){
         else if (wd>=10) severity="Minor";
         rows.push({
             Hour: ((t+1)*timestepHours).toFixed(2),
-            Rainfall: Number(rainfall[t].toFixed(2)),
-            WaterDepth: Number(water_depth[t].toFixed(2)),
-            FloodedArea: Number(flooded_area[t].toFixed(2)),
+            Rainfall_mm: Number(rainfall[t].toFixed(2)),
+            WaterDepth_mm: Number(wd.toFixed(2)),
             FloodSeverity: severity
         });
     }
@@ -146,7 +137,7 @@ function calculateWeightedC(){
     const rainfallIntensityAvg = rainfall.reduce((a,b)=>a+b,0)/stormDuration;
 
     return { rows, meta: { rainfallIntensity: +rainfallIntensityAvg.toFixed(2), Tc: +Tc_hours.toFixed(2), C: runoffC },
-             series: { rainfall, water_depth, flooded_area, canalOutflow: Array(timesteps).fill(canalOutflowPerTimestep), timestepHours } };
+             series: { rainfall, water_depth, timestepHours } };
   }
 
   function renderTable(rows){
@@ -227,11 +218,8 @@ function calculateWeightedC(){
       }
     }
 
-    const colors = {rainfall:"#1f77b4", WaterDepth:"#d62728", flooded_area:"#2ca02c"}; 
-    for(const key in seriesToDraw){ 
-      if(key==="canalOutflow") continue; 
-      drawLine(seriesToDraw[key], colors[key]); 
-    }
+    const colors = {rainfall:"#1f77b4", WaterDepth:"#d62728"}; 
+    for(const key in seriesToDraw){ drawLine(seriesToDraw[key], colors[key] || "#000"); }
 
     ctx.fillStyle="#111"; ctx.font="14px system-ui"; ctx.textAlign="left";
   }
@@ -255,16 +243,14 @@ function calculateWeightedC(){
     const result = runSimulation(vals);
     renderTable(result.rows);
 
-    drawChart(chartFloodedArea, {flooded_area: result.series.flooded_area}, result.series.timestepHours);
     drawChart(chartOtherOutputs, {rainfall: result.series.rainfall, WaterDepth: result.series.water_depth}, result.series.timestepHours);
 
-  summary.innerHTML = `Runoff coefficient (C): <strong>${result.meta.C}</strong>, 
-  Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>, 
-  Average Rainfall Intensity: <strong>${result.meta.rainfallIntensity.toFixed(2)} mm/h</strong>`;
+    summary.innerHTML = `Runoff coefficient (C): <strong>${result.meta.C}</strong>, 
+    Time of concentration (Tc): <strong>${result.meta.Tc} h</strong>, 
+    Average Rainfall Intensity: <strong>${result.meta.rainfallIntensity.toFixed(2)} mm/h</strong>`;
 
-  setTimeout(()=>simulateBtn.disabled=false,250);
-});
+    setTimeout(()=>simulateBtn.disabled=false,250);
+  });
 
-  drawChart(chartFloodedArea, {flooded_area:[]});
   drawChart(chartOtherOutputs, {rainfall:[], WaterDepth:[]});
 })();
