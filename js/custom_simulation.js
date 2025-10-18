@@ -45,11 +45,11 @@
 
   function validateInputs(vals){
     const { totalRainfall, stormDuration, timesteps, canalLength, canalWidth, canalHeight, canalSlope } = vals;
-    if (!(totalRainfall>=0)) return "Total rainfall must be >= 0.";
-    if (!(stormDuration>0)) return "Storm duration must be positive.";
-    if (!(timesteps >= 1 && Number.isInteger(timesteps))) return "Timesteps must be a positive integer.";
-    if (!(canalLength>0 && canalWidth>0 && canalHeight>0)) return "Canal dimensions must be positive.";
-    if (!(canalSlope>0)) return "Canal slope must be positive.";
+    if (!(totalRainfall>=0)) return "Total rainfall greater than 0.";
+    if (!(stormDuration>0)) return "Storm duration greater than 0.";
+    if (!(timesteps >= 1 && Number.isInteger(timesteps))) return "Timesteps greater than 0.";
+    if (!(canalLength>0 && canalWidth>0 && canalHeight>0)) return "Canal dimensions greater than 0.";
+    if (!(canalSlope>0)) return "Canal slope greater than 0.";
     if(landUses.length===0) return "Please add at least one land use.";
     for(const lu of landUses){
       const area = parseFloat(lu.areaInput.value);
@@ -148,9 +148,11 @@
     for(let t=0; t<timesteps; t++){
         const wd = water_depth[t];
         let severity = "None";
-        if (wd>=300) severity="Severe";
-        else if (wd>=200) severity="Moderate";
-        else if (wd>=100) severity="Minor";
+        if (wd>=600) severity="Extreme Flooding";   
+        else if (wd>=301) severity="Severe Flooding"; 
+        else if (wd>=151) severity="Moderate Flooding";  
+        else if (wd>=51) severity="Minor Flooding";   
+        else if (wd>=0) severity="No flooding";    
         rows.push({
             Hour: ((t+1)*timestepHours).toFixed(2),
             Rainfall_mm: Number(rainfall[t].toFixed(2)),

@@ -7,12 +7,12 @@
 
   function validateInputs(vals){
     const { totalArea, totalRainfall, stormDuration, timesteps, canalLength, canalWidth, canalHeight, canalSlope } = vals;
-    if (!(totalArea>0)) return "Total area must be positive.";
-    if (!(totalRainfall>0)) return "Total rainfall must be > 0.";
-    if (!(stormDuration>0)) return "Storm duration must be positive.";
+    if (!(totalArea>0)) return "Total area must be greater than 0.";
+    if (!(totalRainfall>0)) return "Total rainfall must be greater than 0.";
+    if (!(stormDuration>0)) return "Storm duration must be greater than 0.";
     if (!(timesteps >= 1 && Number.isInteger(timesteps))) return "Timesteps must be a positive integer.";
-    if (!(canalLength>0 && canalWidth>0 && canalHeight>0)) return "Canal dimensions must be positive.";
-    if (!(canalSlope>0)) return "Canal slope must be positive.";
+    if (!(canalLength>0 && canalWidth>0 && canalHeight>0)) return "Canal dimensions greater than 0.";
+    if (!(canalSlope>0)) return "Canal slope greater than 0.";
     return null;
   }
 
@@ -81,8 +81,7 @@
         canalStorage_m3 -= actualOutflow_m3;
         // surfaceFlood_m3 remains as is (no quick outflow assumed)
 
-        // compute flood depth over flood-prone area (not whole catchment)
-        const floodAreaFactor = 0.2; // 20% of total area floods
+        const floodAreaFactor = 0.2;
         const floodArea = totalArea * floodAreaFactor;
         const waterDepth_m = surfaceFlood_m3 / floodArea;
         const waterDepth_mm = waterDepth_m * 1000;
@@ -94,11 +93,11 @@
     for(let t=0; t<timesteps; t++){
         const wd = water_depth[t];
         let severity = "None";
-        if (wd>=300) severity="Extreme Flooding";   // >30 cm
-        else if (wd>=301) severity="Severe Flooding"; // >20 cm
-        else if (wd>=151) severity="Moderate Flooding";    // >10 cm
-        else if (wd>=51) severity="Minor Flooding";    // >10 cm
-        else if (wd>=0) severity="No flooding";    // >10 cm
+        if (wd>=600) severity="Extreme Flooding";   
+        else if (wd>=301) severity="Severe Flooding"; 
+        else if (wd>=151) severity="Moderate Flooding";  
+        else if (wd>=51) severity="Minor Flooding";   
+        else if (wd>=0) severity="No flooding";    
 
         rows.push({
             Hour: ((t+1)*timestepHours).toFixed(2),

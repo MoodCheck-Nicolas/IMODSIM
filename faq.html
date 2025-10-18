@@ -101,13 +101,6 @@ n = Manning's roughness coefficient
   </div>
 
   <div class="faq-item">
-    <button class="faq-question">Why does the model show “None” for C sometimes?</button>
-    <div class="faq-answer">
-      <p>Before any land-use areas are added, the model cannot compute a runoff coefficient. In such cases, it displays “None” until the user inputs land-use areas and their corresponding coefficients.</p>
-    </div>
-  </div>
-
-  <div class="faq-item">
     <button class="faq-question">What are the main limitations of the model?</button>
     <div class="faq-answer">
       <ul>
@@ -140,8 +133,19 @@ n = Manning's roughness coefficient
     </div>
   </div>
 
-</main>
+  <div class="faq-item">
+    <button class="faq-question">How does the simulation determine flood severity?</button>
+    <div class="faq-answer">
+      <p>The simulation classifies flood severity based on water depth (wd) in millimeters using the following logic:</p>
+        <li>if greater than 600mm,  severity="Extreme Flooding"</li>   
+        <li>if greater than 301mm, severity="Severe Flooding"</li>
+        <li>if greater than 150mm, severity="Moderate Flooding"</li>
+        <li>if greater than 51mm, severity="Minor Flooding"</li>
+        <li>if 0 mm, severity="No flooding</li>
+    </div>
+  </div>
 
+</main>
 
 <footer>
   <p>&copy; 2025 Urban Flood Simulation Tool</p>
