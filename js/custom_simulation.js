@@ -143,7 +143,6 @@
         water_depth.push(+waterDepth_mm.toFixed(2));
     }
 
-    // Table rows
     const rows = [];
     for(let t=0; t<timesteps; t++){
         const wd = water_depth[t];
