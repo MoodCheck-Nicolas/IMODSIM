@@ -89,14 +89,21 @@
     <button class="faq-question">How is canal outflow computed?</button>
     <div class="faq-answer">
       <pre>
-Q = (1/n) × A × R^(2/3) × sqrt(S)
-A = canal cross-sectional area
-R = hydraulic radius = A / P
-P = wetted perimeter
-S = slope of the canal bed
-n = Manning's roughness coefficient
+        Q = (1/n) × A × R^(2/3) × sqrt(S)
+        A = canal cross-sectional area
+        R = hydraulic radius = A / P
+        P = wetted perimeter
+        S = slope of the canal bed
+        n = Manning's roughness coefficient
       </pre>
       <p>Manning's Equation is applied to determine the maximum flow the canal can carry, which is compared against runoff inflow to assess flooding risk.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">How are all these methods combined?</button>
+    <div class="faq-answer">
+      <p>All the models were integrated into a single simulation process where rainfall was first distributed over time using the triangular hyetograph, then converted into runoff volume by multiplying the rainfall depth with the measured drainage area and a runoff coefficient. This inflow was continuously compared with the canal’s discharge capacity calculated through Manning’s Equation, which considered canal geometry, slope, and roughness. At each time step, if the incoming runoff was greater than the canal’s outflow capacity, excess water accumulated and spilled over, resulting in rising water depth on the surface. The final outputs were the simulated water depth, any overflow beyond canal capacity, and the corresponding flood severity classification.</p>
     </div>
   </div>
 
@@ -141,7 +148,7 @@ n = Manning's roughness coefficient
         <li>if greater than 301mm, severity="Severe Flooding"</li>
         <li>if greater than 150mm, severity="Moderate Flooding"</li>
         <li>if greater than 51mm, severity="Minor Flooding"</li>
-        <li>if 0 mm, severity="No flooding</li>
+        <li>if 0 mm, severity="No flooding"</li>
     </div>
   </div>
 
